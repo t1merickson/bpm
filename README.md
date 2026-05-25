@@ -1,46 +1,64 @@
 # BPM
 
-A reworked version of the bpm counter initially developed by [@bencmbrook](https://github.com/bencmbrook), as the original version is seemingly abandonware.
+A lightweight beats-per-minute tapper that lives in the macOS menu bar. Click the icon in time with the beat and it reports the average BPM. Useful for figuring out whether a track will fit into a set.
 
-Improvements by me ([@harryclegg](https://github.com/harryclegg)) include:
+## Usage
 
-- Re-written application logic.
-- Project files have been upgraded to work with modern XCode.
-- Slight user interface/experience tweaks.
+- **Click** — register a tap. After the second tap, the menu bar shows the running average BPM.
+- **Right-click** — reset.
+- **⌘-Click** — copy the current BPM to the clipboard.
+- **⌥-Click** — show the instructions popup.
+- **⌃-Click** — quit the app.
 
-Please see [latest release](https://github.com/harryclegg/bpm/releases/latest) for binary download.
+The display auto-resets to the placeholder glyph after ~1.5 seconds without a tap.
 
-Original readme follows:
+## Building
 
-------
+Open `bpm.xcodeproj` in Xcode and build. The project produces a Universal Binary (Apple Silicon + Intel) and targets macOS 11.0 Big Sur or later.
 
-A lightweight beats-per-minute tapper for the Mac status bar
+## License & attribution
 
-![Example](http://i.imgur.com/Qlh0mVF.gif)
+This work is licensed under the [Creative Commons Attribution 3.0 Unported License (CC BY 3.0)](https://creativecommons.org/licenses/by/3.0/).
 
-If you mix music, you probably wonder if the song you're listening to could fit into a set. This discreet app is always available to provide the answer.
+Originally created by **Ben Brook** ([@bencmbrook](https://github.com/bencmbrook)) — upstream repository: <https://github.com/bencmbrook/bpm>. Subsequently modified by **Harry Clegg** ([@harryclegg](https://github.com/harryclegg)) — upstream fork: <https://github.com/harryclegg/bpm>. Further modified in this fork by **Tim Erickson** ([@t1merickson](https://github.com/t1merickson)).
 
-## Installation
+This is a modified version of the original work; modifications are summarized in the changelog below.
 
-~~[Download the zip.](https://github.com/bencmbrook/bpm/raw/master/bpm.zip) Simply double click on the app icon to launch the app. To use it in the future, drag the app into your Applications folder!~~
+---
 
-Compatible with OS X 10.10 Yosemite and later.
+## Changelog
 
-## Quitting the App
-Control-click the icon to quit.
+### This fork — [@t1merickson](https://github.com/t1merickson)
 
-## Contributing
+- **Menu bar UI polish:**
+  - Replaced the "bpm" text in the ready state with the `music.quarternote.3` SF Symbol (template-rendered so it tints with the menu bar).
+  - Status item now has a fixed width sized for the widest possible 3-digit BPM ("888"), so it no longer jumps around as the BPM digit count changes.
+  - Menu bar text is rendered 1pt smaller than the system default for a slightly more refined look.
+  - SF Symbol weight and size tuned (`pointSize: 15, weight: .medium`) to sit comfortably next to other menu bar glyphs.
+  - Tooltip is now dynamic: shows "BPM Tapper — click to tap" in the ready state, "Keep tapping…" after the first tap, and "<N> BPM — ⌘-click to copy" once a BPM is being measured.
+- **New behavior:**
+  - **⌘-Click copies the current BPM to the clipboard**, for quickly pasting tempo into a DAW or notes. Beeps if there's nothing to copy yet.
+  - Removed the splash/instructions dialog that appeared on every launch. Instructions are still available via ⌥-Click.
+- **Code health:**
+  - Bumped deployment target from macOS 10.13 → macOS 11.0 (required for SF Symbols).
+  - Fixed a latent force-unwrap of `NSApp.currentEvent` in the click handler that could crash on programmatic / accessibility-driven invocation.
+  - Tightened the instructions popup copy and switched it from a `.warning` alert style to `.informational` (it was using the yellow caution triangle for what is really just a help dialog).
+  - Removed the now-dead `noShowDialogOnStart` preference plumbing and "Do not show this message on launch" suppression checkbox.
+  - Removed the demo gif from the repo.
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request!
+### v1.3 — [@harryclegg](https://github.com/harryclegg)
 
-## Contributors
+- Re-wrote the application logic from the ground up. Tap-interval tracking was split out into a dedicated `BPMTapper` class with explicit reset / averaging behavior; `AppDelegate` is now just the menu bar wiring.
+- Fixed the timing logic so the running average correctly weights every tap interval ([#3](https://github.com/harryclegg/bpm/pull/3)).
+- Upgraded the Xcode project files to build cleanly on modern Xcode versions ([#1](https://github.com/harryclegg/bpm/pull/1)).
+- Small user-interface and user-experience tweaks throughout.
+- Added an option to suppress the instructions popup at launch (later removed in this fork, since the popup itself no longer fires on launch).
 
-Thank you to [harryclegg](https://github.com/harryclegg) for adding the option to hide instructions at launch.
+### Original — [@bencmbrook](https://github.com/bencmbrook)
 
-## License
-
-Creative Commons Attribution 3.0
+- Initial release of the menu bar BPM tapper for OS X.
+- Click in time with the beat; the menu bar shows the running average BPM.
+- Right-click to reset, control-click to quit.
+- Instructions popup on first launch with a "don't show again" option.
+- Yosemite (OS X 10.10) compatibility.
+- Packaged as a downloadable `.zip` once the original hosting site went down.

@@ -1,0 +1,37 @@
+{
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.08586,0.01080,0.03237,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "glass" : false,
+          "image-name" : "music.quarternote.3.svg",
+          "name" : "music.quarternote.3",
+          "position" : {
+            "scale" : 29.999999999999996,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
